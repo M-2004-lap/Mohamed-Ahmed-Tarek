@@ -6,35 +6,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     viewCvBtn.addEventListener('click', function(e) {
         e.preventDefault();
+        
+        // إنشاء عنصر الإشعار المنبثق
         showNotification('📄 CV is being prepared for download...', 'info');
         
+        // محاكاة تحميل CV بعد ثانية
         setTimeout(() => {
             showNotification('✅ CV downloaded successfully!', 'success');
         }, 1000);
     });
 
-    // 2. تفاعل مع الصورة الشخصية
-    const profileImage = document.getElementById('profileImage');
-    
-    profileImage.addEventListener('click', function() {
-        // محاكاة اختيار صورة
-        showNotification('📸 Click "Add Photo" to upload your image', 'info');
-        
-        // تغيير الأيقونة مؤقتاً
-        const icon = this.querySelector('i');
-        icon.className = 'fas fa-spinner fa-spin';
-        
-        setTimeout(() => {
-            icon.className = 'fas fa-user-secret';
-            showNotification('✨ Photo upload feature coming soon!', 'success');
-        }, 1500);
-    });
-
-    // 3. تفاعل مع بطاقات المشاريع
+    // 2. تفاعل مع بطاقات المشاريع
     const projectItems = document.querySelectorAll('.project-item');
     
     projectItems.forEach(item => {
         item.addEventListener('click', function(e) {
+            // منع التفاعل إذا تم الضغط على الرابط نفسه
             if (e.target.closest('.project-link')) return;
             
             const projectType = this.dataset.project;
@@ -42,11 +29,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
             showNotification(`🔍 Opening ${projectName} labs...`, 'info');
             
+            // محاكاة فتح المشروع بعد نصف ثانية
             setTimeout(() => {
                 showNotification(`✨ ${projectName} materials loaded`, 'success');
             }, 500);
         });
         
+        // روابط المشاريع
         const projectLink = item.querySelector('.project-link');
         projectLink.addEventListener('click', function(e) {
             e.preventDefault();
@@ -60,38 +49,43 @@ document.addEventListener('DOMContentLoaded', function() {
             
             showNotification(`🚀 Redirecting to ${projectNames[linkType]} labs...`, 'info');
             
-            this.style.backgroundColor = '#00a6ff';
-            this.style.color = '#0a0c0f';
+            // تغيير لون الرابط مؤقتاً
+            this.style.backgroundColor = '#b8d9f0';
             setTimeout(() => {
                 this.style.backgroundColor = '';
-                this.style.color = '';
             }, 300);
         });
     });
 
-    // 4. تفاعل مع قائمة الكورسات
+    // 3. تفاعل مع قائمة الكورسات
     const courseItems = document.querySelectorAll('.course-list li');
     
-    courseItems.forEach(item => {
+    courseItems.forEach((item, index) => {
+        item.addEventListener('mouseenter', function() {
+            // إضافة تأثير عند المرور
+            this.style.transition = 'all 0.2s ease';
+        });
+        
         item.addEventListener('click', function() {
             const courseText = this.textContent.trim();
             showNotification(`📚 Course: ${courseText.substring(0, 30)}...`, 'info');
         });
     });
 
-    // 5. تفاعل مع شهادة Microsoft
+    // 4. تفاعل مع شهادة Microsoft
     const achievementCard = document.getElementById('achievementCard');
     
     achievementCard.addEventListener('click', function() {
         showNotification('🏆 Microsoft Sprints Camp Certificate', 'success');
         
+        // تأثير وامض
         this.style.transform = 'scale(0.98)';
         setTimeout(() => {
             this.style.transform = 'scale(1)';
         }, 150);
     });
 
-    // 6. تفاعل مع مهارات Cybersecurity
+    // 5. تفاعل مع مهارات Cybersecurity
     const cyberTags = document.querySelectorAll('.cyber-tag');
     
     cyberTags.forEach(tag => {
@@ -99,22 +93,21 @@ document.addEventListener('DOMContentLoaded', function() {
             const skillName = this.textContent;
             showNotification(`⚡ Skill selected: ${skillName}`, 'info');
             
-            this.style.backgroundColor = '#00a6ff';
-            this.style.color = '#0a0c0f';
+            // تأثير مؤقت
+            this.style.backgroundColor = '#2d7ca0';
             setTimeout(() => {
                 this.style.backgroundColor = '';
-                this.style.color = '';
             }, 200);
         });
     });
 
-    // 7. إحصائيات في console
+    // 6. إحصائيات خفيفة (تظهر في الـ console)
     function displayStats() {
         const projectCount = document.querySelectorAll('.project-item').length;
         const courseCount = document.querySelectorAll('.course-list li').length;
         const skillCount = document.querySelectorAll('.skill-tag').length;
         
-        console.log('%c📊 Portfolio Statistics:', 'color: #00a6ff; font-weight: bold');
+        console.log('📊 Portfolio Statistics:');
         console.log(`   Projects: ${projectCount}`);
         console.log(`   Courses: ${courseCount}`);
         console.log(`   Skills: ${skillCount}`);
@@ -123,26 +116,60 @@ document.addEventListener('DOMContentLoaded', function() {
     
     displayStats();
 
-    // 8. نظام الإشعارات المخصص
+    // 7. كشف المهارات المميزة
+    function highlightTopSkills() {
+        const skills = document.querySelectorAll('.skill-tag.cyber-tag');
+        if (skills.length > 0) {
+            // إضافة class مميز لأول 3 مهارات
+            for (let i = 0; i < Math.min(3, skills.length); i++) {
+                skills[i].style.position = 'relative';
+                // إضافة نجمة صغيرة
+                const star = document.createElement('span');
+                star.innerHTML = '⭐';
+                star.style.position = 'absolute';
+                star.style.top = '-8px';
+                star.style.right = '-8px';
+                star.style.fontSize = '12px';
+                skills[i].style.position = 'relative';
+                skills[i].appendChild(star);
+            }
+        }
+    }
+    
+    // تأخير بسيط لظهور النجوم
+    setTimeout(highlightTopSkills, 500);
+
+    // 8. وظيفة تغيير ألوان الخلفية بشكل خفيف
+    let colorIndex = 0;
+    const colors = ['#f0f4f8', '#ecf3f9', '#e8f2fa', '#e4f1fb'];
+    
+    document.body.addEventListener('dblclick', function() {
+        colorIndex = (colorIndex + 1) % colors.length;
+        document.body.style.backgroundColor = colors[colorIndex];
+        document.body.style.transition = 'background-color 0.5s ease';
+        showNotification('🎨 Theme color changed!', 'success');
+    });
+
+    // 9. نظام الإشعارات المخصص
     function showNotification(message, type = 'info') {
+        // إزالة أي إشعار سابق
         const oldNote = document.querySelector('.custom-notification');
         if (oldNote) oldNote.remove();
         
+        // إنشاء عنصر الإشعار
         const notification = document.createElement('div');
         notification.className = 'custom-notification';
         
-        let bgColor, borderColor, icon;
+        // تخصيص الألوان حسب النوع
+        let bgColor, icon;
         if (type === 'success') {
-            bgColor = '#0f1a22';
-            borderColor = '#00a6ff';
+            bgColor = '#1e7e34';
             icon = '✅';
         } else if (type === 'error') {
-            bgColor = '#0f1a22';
-            borderColor = '#ff4444';
+            bgColor = '#b53b3b';
             icon = '❌';
         } else {
-            bgColor = '#0f1a22';
-            borderColor = '#ff4444';
+            bgColor = '#1f6e8c';
             icon = 'ℹ️';
         }
         
@@ -151,22 +178,22 @@ document.addEventListener('DOMContentLoaded', function() {
             bottom: 20px;
             right: 20px;
             background: ${bgColor};
-            color: #00a6ff;
+            color: white;
             padding: 12px 24px;
             border-radius: 50px;
             font-family: 'Inter', sans-serif;
             font-weight: 500;
-            box-shadow: 0 5px 20px rgba(0, 166, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             z-index: 1000;
             animation: slideInRight 0.3s ease forwards;
             display: flex;
             align-items: center;
             gap: 10px;
-            border: 1px solid ${borderColor};
         `;
         
         notification.innerHTML = `${icon} ${message}`;
         
+        // إضافة animation إذا لم تكن موجودة
         if (!document.querySelector('#notificationKeyframes')) {
             const style = document.createElement('style');
             style.id = 'notificationKeyframes';
@@ -185,13 +212,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.body.appendChild(notification);
         
+        // إخفاء الإشعار بعد 3 ثواني
         setTimeout(() => {
             notification.style.animation = 'slideOutRight 0.3s ease forwards';
             setTimeout(() => notification.remove(), 300);
         }, 3000);
     }
 
-    // 9. البحث بالضغط على Shift مرتين
+    // 10. إضافة خاصية البحث السريع (double shift)
     let lastKeyTime = 0;
     let shiftCount = 0;
     
@@ -201,6 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (currentTime - lastKeyTime < 500) {
                 shiftCount++;
                 if (shiftCount === 2) {
+                    // Double shift detected
                     const searchTerm = prompt('🔍 Search in portfolio:', '');
                     if (searchTerm) {
                         searchInPortfolio(searchTerm);
@@ -223,16 +252,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const text = el.textContent.toLowerCase();
             if (text.includes(term)) {
                 foundCount++;
+                // تمييز مؤقت
                 const originalBg = el.style.backgroundColor;
-                el.style.backgroundColor = '#1a2a33';
-                el.style.border = '1px solid #00a6ff';
-                el.style.transition = 'all 0.3s ease';
+                el.style.backgroundColor = '#fff3bf';
+                el.style.transition = 'background-color 0.3s ease';
                 el.style.borderRadius = '8px';
                 el.style.padding = '2px 4px';
                 
                 setTimeout(() => {
                     el.style.backgroundColor = originalBg;
-                    el.style.border = '';
                 }, 2000);
             }
         });
@@ -240,16 +268,5 @@ document.addEventListener('DOMContentLoaded', function() {
         showNotification(`🔎 Found ${foundCount} matches for "${term}"`, 'info');
     }
 
-    // 10. تغيير ألوان الخلفية (نسخة داكنة)
-    let themeIndex = 0;
-    const themes = ['#0a0c0f', '#0f1a22', '#111418', '#0b1a24'];
-    
-    document.body.addEventListener('dblclick', function() {
-        themeIndex = (themeIndex + 1) % themes.length;
-        document.body.style.backgroundColor = themes[themeIndex];
-        document.body.style.transition = 'background-color 0.5s ease';
-        showNotification('🎨 Dark theme changed!', 'success');
-    });
-
-    console.log('%c🚀 Dark Portfolio Loaded Successfully!', 'color: #ff4444; font-weight: bold');
+    console.log('🚀 Portfolio JS loaded successfully!');
 });
